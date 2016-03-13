@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import net.minecraft.server.v1_9_R1.*;
 import net.minecraft.server.v1_9_R1.PacketPlayOutTitle.EnumTitleAction;
 
-public class ElytraRacePortal implements ConfigurationSerializable{
+public class ElytraRacePortal implements ConfigurationSerializable {
 	
 	private String race;
 	private ElytraRacePortalType type;
@@ -122,14 +122,18 @@ public class ElytraRacePortal implements ConfigurationSerializable{
 		title(player, ChatColor.BLACK + "Wrong Portal", ChatColor.BLACK + "You need to pass " + (getRace().getPortalNo(player) + 1) + " First", 20, 2 * 20, 20);
 	}
 	
-	public static void deserialize(Map<String, Object> map) {
-		// TODO DeSerialize ElytraRace
+	@SuppressWarnings("unchecked")
+	public static ElytraRacePortal deserialize(Map<String, Object> map) {
+		return new ElytraRacePortal((String) map.get("race"), ElytraRacePortalType.valueOf((String) map.get("type")), (List<Location>) map.get("locs"));
 	}
 	
 	@Override
 	public Map<String, Object> serialize() {
-		// TODO Serialize ElytraRace
-		return null;
+		Map<String, Object> map = new HashMap<>();
+		map.put("race", race);
+		map.put("type", type.name());
+		map.put("locs", locs);
+		return map;
 	}
 	
 	private void effect(Color color) {

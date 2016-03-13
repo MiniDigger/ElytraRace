@@ -84,13 +84,19 @@ public class ElytraRace implements ConfigurationSerializable {
 		portalNos.put(p.getUniqueId(), 0);
 	}
 	
-	public static void deserialize(Map<String, Object> map) {
-		// TODO DeSerialize ElytraRace
+	@SuppressWarnings("unchecked")
+	public static ElytraRace deserialize(Map<String, Object> map) {
+		return new ElytraRace((String) map.get("name"), (Location) map.get("spawn"), (List<ElytraRacePortal>) map.get("portals"),
+				(Map<UUID, Double>) map.get("scores"));
 	}
 	
 	@Override
 	public Map<String, Object> serialize() {
-		// TODO Serialize ElytraRace
-		return null;
+		Map<String, Object> map = new HashMap<>();
+		map.put("name", name);
+		map.put("spawn", spawn);
+		map.put("portals", portals);
+		map.put("scores", scores);
+		return map;
 	}
 }
