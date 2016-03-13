@@ -7,6 +7,10 @@
 	<name>ElytraRace</name>
 	<description>Use your new fancy Elytra to fly through portals and compare your score to your friends</description>
 
+	<scm>
+		<connection>scm:git://github.com/MiniDigger/ElytraRace.git</connection>
+	</scm>
+
 	<build>
 		<finalName>${project.artifactId}-${project.version}-b${buildNumber}</finalName>
 		<resources>
@@ -54,6 +58,20 @@
 						<phase>validate</phase>
 						<goals>
 							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4.3</version>
+				<!-- TODO Check what we can exclude -->
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
 						</goals>
 					</execution>
 				</executions>

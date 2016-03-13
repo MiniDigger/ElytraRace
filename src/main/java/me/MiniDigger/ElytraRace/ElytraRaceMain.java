@@ -19,7 +19,7 @@ import mkremins.fanciful.FancyMessage;
 public class ElytraRaceMain extends JavaPlugin {
 	
 	public static final FancyMessage PREFIX = new FancyMessage("[").color(ChatColor.BLACK).then("Elytra").color(ChatColor.RED).then("Race")
-			.color(ChatColor.BLUE).then("]").color(ChatColor.BLACK);
+			.color(ChatColor.BLUE).then("] ").color(ChatColor.BLACK);
 	private static ElytraRaceMain INSTANCE;
 	
 	public static final int NO_SCORE = -9000;
@@ -28,9 +28,9 @@ public class ElytraRaceMain extends JavaPlugin {
 	public static int SHOW_HIGHSCORE = 5;
 	public static double BOOST_SPEED = 4.0;
 	public static double SLOW_SPEED = 0.6;
+	public static boolean WHIP_MODE = true;
 	
 	private List<ElytraRace> races = new ArrayList<>();
-	private List<ElytraRacePortal> portals = new ArrayList<>();
 	
 	private CommandFramework command;
 	private SimpleConfigManager configManager;
@@ -57,6 +57,7 @@ public class ElytraRaceMain extends JavaPlugin {
 		config();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void config() {
 		configManager = new SimpleConfigManager(this);
 		// TODO add plugin page url
@@ -75,23 +76,33 @@ public class ElytraRaceMain extends JavaPlugin {
 		}
 		
 		FLY_SPEED = mainConfig.getDouble("flySpeed", 2);
+		mainConfig.set("flySpeed", FLY_SPEED, "The speed the player is flying while in the race");
 		SHOW_HIGHSCORE = mainConfig.getInt("showHighscore", 5);
+		mainConfig.set("showHighscore", SHOW_HIGHSCORE, "The number of players the plugin should list under highscores");
+		WHIP_MODE = mainConfig.getBoolean("whipMode", true);
+		mainConfig.set("whipMode", WHIP_MODE, "Patent-Pending ThinkofDeath whip mode: If enabled players will get hit by I lightning strike when hitting blocks while racing");
+		
+		races = (List<ElytraRace>) mainConfig.get("races");
+		if (races == null) {
+			races = new ArrayList<>();
+			mainConfig.set("races", races, "Do not modify unless you know what you are doing");
+		}
+		
+		mainConfig.saveConfig();
 	}
 	
 	public ElytraRacePortal getPortal(Location loc) {
-		for (ElytraRacePortal p : portals) {
-			for (Location l : p.getLocations()) {
-				if (l.getWorld().getName().equals(loc.getWorld().getName()) && l.getBlockX() == loc.getBlockX() && l.getBlockY() == loc.getBlockY()
-						&& loc.getBlockZ() == l.getBlockZ()) {
-					return p;
+		for (ElytraRace race : races) {
+			for (ElytraRacePortal p : race.getPortals()) {
+				for (Location l : p.getLocations()) {
+					if (l.getWorld().getName().equals(loc.getWorld().getName()) && l.getBlockX() == loc.getBlockX() && l.getBlockY() == loc.getBlockY()
+							&& l.getBlockZ() == loc.getBlockZ()) {
+						return p;
+					}
 				}
 			}
 		}
 		return null;
-	}
-	
-	public static ElytraRaceMain getInstance() {
-		return INSTANCE;
 	}
 	
 	public ElytraRace getRace(Player player) {
@@ -111,4 +122,24 @@ public class ElytraRaceMain extends JavaPlugin {
 		}
 		return null;
 	}
+	
+	public void addRace(ElytraRace race) {
+		races.add(race);
+		saveRaces();
+	}
+	
+	public void saveRaces() {
+		mainConfig.set("races", races, "Do not modify unless you know what you are doing");
+		mainConfig.saveConfig();
+	}
+	
+	public void deleteRace(ElytraRace race) {
+		races.remove(race);
+		saveRaces();
+	}
+	
+	public static ElytraRaceMain getInstance() {
+		return INSTANCE;
+	}
+	
 }

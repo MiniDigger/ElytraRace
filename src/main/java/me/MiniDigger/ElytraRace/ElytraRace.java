@@ -2,7 +2,7 @@ package me.MiniDigger.ElytraRace;
 
 import java.util.*;
 
-import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
@@ -84,6 +84,10 @@ public class ElytraRace implements ConfigurationSerializable {
 		portalNos.put(p.getUniqueId(), 0);
 	}
 	
+	public void setSpawn(Location spawn) {
+		this.spawn = spawn;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static ElytraRace deserialize(Map<String, Object> map) {
 		return new ElytraRace((String) map.get("name"), (Location) map.get("spawn"), (List<ElytraRacePortal>) map.get("portals"),
@@ -98,5 +102,24 @@ public class ElytraRace implements ConfigurationSerializable {
 		map.put("portals", portals);
 		map.put("scores", scores);
 		return map;
+	}
+	
+	public Map<UUID, Double> getHighScores() {
+		return sortByValue(scores);
+	}
+	
+	private Map<UUID, Double> sortByValue(Map<UUID, Double> map) {
+		List<Map.Entry<UUID, Double>> list = new LinkedList<>(map.entrySet());
+		Collections.sort(list, new Comparator<Map.Entry<UUID, Double>>() {
+			@Override
+			public int compare(Map.Entry<UUID, Double> o1, Map.Entry<UUID, Double> o2) {
+				return -1 * (o1.getValue()).compareTo(o2.getValue());
+			}
+		});
+		Map<UUID, Double> result = new LinkedHashMap<>();
+		for (Map.Entry<UUID, Double> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
 	}
 }

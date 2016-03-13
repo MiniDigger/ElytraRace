@@ -19,12 +19,17 @@ public class ElytraRacePortal implements ConfigurationSerializable {
 	
 	private String race;
 	private ElytraRacePortalType type;
-	private List<Location> locs;
+	private List<Location> locs = new ArrayList<>();
 	
 	public ElytraRacePortal(String race, ElytraRacePortalType type, List<Location> locs) {
+		this(race, type);
+		this.locs = locs;
+	}
+	
+	public ElytraRacePortal(String race, ElytraRacePortalType type) {
 		this.race = race;
 		this.type = type;
-		this.locs = locs;
+		this.locs = new ArrayList<>();
 	}
 	
 	public List<Location> getLocations() {
@@ -110,6 +115,7 @@ public class ElytraRacePortal implements ConfigurationSerializable {
 			break;
 		}
 		
+		sound(p.getLocation());
 		effect(color);
 		ElytraRace race = getRace();
 		title(p, ChatColor.GOLD + "Portal passed", ChatColor.GOLD + "Only " + (race.getPortals().size() - race.getPortalNo(p)) + " Portals to go", 20, 2 * 20,
@@ -120,6 +126,13 @@ public class ElytraRacePortal implements ConfigurationSerializable {
 		effect(Color.BLACK);
 		actionbar(player, ChatColor.RED + "That was the wrong portal!");
 		title(player, ChatColor.BLACK + "Wrong Portal", ChatColor.BLACK + "You need to pass " + (getRace().getPortalNo(player) + 1) + " First", 20, 2 * 20, 20);
+	}
+	
+	public void applyCreationEffect(Player player) {
+		sound(player.getLocation());
+		effect(Color.GREEN, player);
+		actionbar(player, ChatColor.GREEN + "Portal Created!");
+		title(player, ChatColor.GREEN + "Portal Created!", ChatColor.GREEN + "Portal was created with " + locs.size() + " Locations", 20, 2 * 20, 20);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -136,7 +149,7 @@ public class ElytraRacePortal implements ConfigurationSerializable {
 		return map;
 	}
 	
-	private void effect(Color color) {
+	private void effect(Color color, Player... ppp) {
 		List<Player> players = new ArrayList<>();
 		for (UUID id : getRace().getPlayers()) {
 			Player pp = Bukkit.getPlayer(id);
@@ -145,8 +158,12 @@ public class ElytraRacePortal implements ConfigurationSerializable {
 			}
 		}
 		
+		for (Player p : ppp) {
+			players.add(p);
+		}
+		
 		for (Location loc : locs) {
-			ParticleEffect.CLOUD.sendColor(players, (double) loc.getBlockX(), (double) loc.getBlockY(), (double) loc.getBlockZ(), color);
+			ParticleEffect.REDSTONE.sendColor(players, (double) loc.getBlockX(), (double) loc.getBlockY(), (double) loc.getBlockZ(), color);
 		}
 	}
 	
@@ -171,5 +188,9 @@ public class ElytraRacePortal implements ConfigurationSerializable {
 			nmsp.playerConnection.sendPacket(p2);
 		}
 		nmsp.playerConnection.sendPacket(p3);
+	}
+	
+	private void sound(Location loc) {
+		loc.getWorld().playSound(loc, Sound.ENTITY_FIREWORK_BLAST, 1, 1);
 	}
 }
