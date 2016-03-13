@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>me.MiniDigger</groupId>
+	<artifactId>ElytraRace</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>ElytraRace</name>
+	<description>Use your new fancy Elytra to fly through portals and compare your score to your friends</description>
+
+	<repositories>
+		<repository>
+			<id>torchmind</id>
+			<url>https://maven.torchmind.com/snapshot/</url>
+		</repository>
+		<repository>
+			<id>stealthyone-repo</id>
+			<url>http://repo.stealthyone.com/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>inventive-repo</id>
+			<url>https://repo.inventivetalent.org/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot</artifactId>
+			<version>1.9-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.torchmind.minecraft</groupId>
+			<artifactId>plugin-annotations</artifactId>
+			<version>1.0-20150912.215331-2</version>
+		</dependency>
+		<dependency>
+			<groupId>mkremins</groupId>
+			<artifactId>fanciful</artifactId>
+			<version>0.3.3-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.inventivetalent</groupId>
+			<artifactId>particleapi</artifactId>
+			<version>2.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
