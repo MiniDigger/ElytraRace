@@ -2,6 +2,8 @@ package me.MiniDigger.ElytraRace;
 
 import java.util.*;
 
+import me.MiniDigger.ElytraRace.ElytraRaceScoreCalculator.ElytraRaceScoreCalculatorType;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
@@ -12,17 +14,19 @@ public class ElytraRace implements ConfigurationSerializable {
 	private List<ElytraRacePortal> portals = new ArrayList<>();
 	private Map<UUID, Double> scores = new HashMap<>();
 	private Map<UUID, Integer> portalNos = new HashMap<>();
+	private ElytraRaceScoreCalculator scoreCalc;
 	
-	public ElytraRace(String name, Location spawn) {
-		this(name, spawn, new ArrayList<ElytraRacePortal>(), new HashMap<UUID, Double>());
+	public ElytraRace(String name, Location spawn, ElytraRaceScoreCalculatorType type) {
+		this(name, spawn, new ArrayList<ElytraRacePortal>(), new HashMap<UUID, Double>(), type);
 	}
 	
-	public ElytraRace(String name, Location spawn, List<ElytraRacePortal> portals, Map<UUID, Double> scores) {
+	public ElytraRace(String name, Location spawn, List<ElytraRacePortal> portals, Map<UUID, Double> scores, ElytraRaceScoreCalculatorType type) {
 		super();
 		this.name = name;
 		this.spawn = spawn;
 		this.portals = portals;
 		this.scores = scores;
+		this.scoreCalc = new ElytraRaceScoreCalculator(type);
 	}
 	
 	public void addPortal(ElytraRacePortal p, int no) {
@@ -91,7 +95,7 @@ public class ElytraRace implements ConfigurationSerializable {
 	@SuppressWarnings("unchecked")
 	public static ElytraRace deserialize(Map<String, Object> map) {
 		return new ElytraRace((String) map.get("name"), (Location) map.get("spawn"), (List<ElytraRacePortal>) map.get("portals"),
-				(Map<UUID, Double>) map.get("scores"));
+				(Map<UUID, Double>) map.get("scores"), ElytraRaceScoreCalculatorType.valueOf((String) map.get("type")));
 	}
 	
 	@Override
@@ -101,6 +105,7 @@ public class ElytraRace implements ConfigurationSerializable {
 		map.put("spawn", spawn);
 		map.put("portals", portals);
 		map.put("scores", scores);
+		map.put("type", scoreCalc.getType().name());
 		return map;
 	}
 	
