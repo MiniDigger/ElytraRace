@@ -55,6 +55,8 @@ public class ElytraRaceListener implements Listener {
 			} else {
 				portal.applyNegativEffect(player);
 			}
+			
+			race.getScoreCalculator().portal(player, portal);
 		}
 	}
 	
@@ -81,6 +83,8 @@ public class ElytraRaceListener implements Listener {
 			p.setHealth(1.0);
 			p.getLocation().getWorld().strikeLightning(p.getLocation());
 			p.damage(9000);// gotta be sure
+			
+			race.getScoreCalculator().stopRace(p);
 		} else {
 			e.setCancelled(true);
 		}

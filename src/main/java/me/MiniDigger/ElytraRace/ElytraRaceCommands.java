@@ -3,6 +3,7 @@ package me.MiniDigger.ElytraRace;
 import java.util.*;
 
 import me.MiniDigger.ElytraRace.ElytraRacePortal.ElytraRacePortalType;
+import me.MiniDigger.ElytraRace.ElytraRaceScoreCalculator.ElytraRaceScoreCalculatorType;
 import me.MiniDigger.ElytraRace.lib.com.minnymin.command.*;
 
 import org.bukkit.*;
@@ -51,39 +52,33 @@ public class ElytraRaceCommands {
 			return;
 		}
 		
-		//TODO add the score stuff
-		
 		race.addPlayer(args.getPlayer());
 		args.getPlayer().teleport(race.getSpawn());
 		args.getPlayer().setGliding(true);
+		
+		race.getScoreCalculator().startRace(args.getPlayer());
 	}
 	
 	@Command(name = "elytrarace.restart", permission = "elytrarace.user", aliases = "er.restart", usage = "elytrarace restart", inGameOnly = true)
 	public void restart(CommandArgs args) throws CloneNotSupportedException {
-		// TODO implement missing command
-		if (args.length() != 1) {
-			ElytraRaceMain.PREFIX.clone().then("Wrong Arguments entered: " + args.getCommand().getUsage()).color(ChatColor.RED).send(args.getSender());
-			return;
-		}
-		
-		String name = args.getArgs()[0];
-		ElytraRace race = ElytraRaceMain.getInstance().getRace(name);
+		ElytraRace race = ElytraRaceMain.getInstance().getRace(args.getPlayer());
 		if (race == null) {
-			ElytraRaceMain.PREFIX.clone().then("Unknown Race: " + name).color(ChatColor.RED).send(args.getSender());
+			ElytraRaceMain.PREFIX.clone().then("You are not in a race!").color(ChatColor.RED).send(args.getSender());
 			return;
 		}
 		
-		//TODO add the score stuff
 		args.getPlayer().teleport(race.getSpawn());
+		race.getScoreCalculator().stopRace(args.getPlayer());
+		race.getScoreCalculator().startRace(args.getPlayer());
 	}
 	
 	@Command(name = "elytrarace.end", permission = "elytrarace.user", aliases = "er.end", usage = "elytrarace end", inGameOnly = true)
 	public void end(CommandArgs args) throws CloneNotSupportedException {
 		ElytraRace race = ElytraRaceMain.getInstance().getRace(args.getPlayer());
 		race.remPlayer(args.getPlayer());
-		//TODO teleport the player somewhere maybe? ^^
-		//TODO handle score stuff
+		// TODO teleport the player somewhere maybe? ^^
 		args.getPlayer().setGliding(false);
+		race.getScoreCalculator().stopRace(args.getPlayer());
 	}
 	
 	@Command(name = "elytrarace.highscore", permission = "elytrarace.user", aliases = "er.highscore", usage = "elytrarace highscore <race>")
@@ -132,9 +127,9 @@ public class ElytraRaceCommands {
 		ElytraRaceMain.PREFIX.clone().then("Your score for race " + name + ": " + score).send(args.getSender());
 	}
 	
-	@Command(name = "elytrarace.create", permission = "elytrarace.admin", aliases = "er.create", usage = "elytrarace create <race>", inGameOnly = true)
+	@Command(name = "elytrarace.create", permission = "elytrarace.admin", aliases = "er.create", usage = "elytrarace create <race> <type>", inGameOnly = true)
 	public void create(CommandArgs args) throws CloneNotSupportedException {
-		if (args.length() != 1) {
+		if (args.length() != 2) {
 			ElytraRaceMain.PREFIX.clone().then("Wrong Arguments entered: " + args.getCommand().getUsage()).color(ChatColor.RED).send(args.getSender());
 			return;
 		}
@@ -145,7 +140,15 @@ public class ElytraRaceCommands {
 			return;
 		}
 		
-		ElytraRace race = new ElytraRace(name, args.getPlayer().getLocation());
+		ElytraRaceScoreCalculatorType type;
+		try {
+			type = ElytraRaceScoreCalculatorType.valueOf(args.getArgs()[1]);
+		} catch (Exception ex) {
+			ElytraRaceMain.PREFIX.clone().then("There is no race type: " + args.getArgs()[1]).color(ChatColor.RED).send(args.getSender());
+			return;
+		}
+		
+		ElytraRace race = new ElytraRace(name, args.getPlayer().getLocation(), type);
 		ElytraRaceMain.getInstance().addRace(race);
 		
 		ElytraRaceMain.PREFIX.clone().then("Race created!").color(ChatColor.GREEN).send(args.getSender());

@@ -92,6 +92,10 @@ public class ElytraRace implements ConfigurationSerializable {
 		this.spawn = spawn;
 	}
 	
+	public ElytraRaceScoreCalculator getScoreCalculator() {
+		return scoreCalc;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static ElytraRace deserialize(Map<String, Object> map) {
 		return new ElytraRace((String) map.get("name"), (Location) map.get("spawn"), (List<ElytraRacePortal>) map.get("portals"),
