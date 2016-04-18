@@ -2,7 +2,7 @@ package me.MiniDigger.ElytraRace;
 
 import org.bukkit.entity.Player;
 
-public class ElytraRaceScoreCalculator {
+public abstract class ElytraRaceScoreCalculator {
 	
 	private ElytraRaceScoreCalculatorType type;
 	
@@ -10,17 +10,11 @@ public class ElytraRaceScoreCalculator {
 		this.type = type;
 	}
 	
-	public void startRace(Player p) {
+	public abstract void startRace(Player p);
 	
-	}
+	public abstract void stopRace(Player p) ;
 	
-	public void stopRace(Player p) {
-	
-	}
-	
-	public void portal(Player p, ElytraRacePortal portal) {
-	
-	}
+	public abstract void portal(Player p, ElytraRacePortal portal) ;
 	
 	public ElytraRaceScoreCalculatorType getType() {
 		return type;
@@ -30,10 +24,26 @@ public class ElytraRaceScoreCalculator {
 		/**
 		 * Time based, need to enter all portals
 		 */
-		RACE,
+		RACE(ElytraRaceRaceScoreCalculator.class),
 		/**
 		 * Get points for flying though portals
 		 */
-		POINTS;
+		POINTS(ElytraRaceRaceScoreCalculator.class);
+
+		private Class clazz;
+
+		private ElytraRaceScoreCalculatorType(Class clazz){
+			this.clazz = clazz;
+		}
+
+		public ElytraRaceScoreCalculator newInstance() {
+			try {
+				return (ElytraRaceScoreCalculator) clazz.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				ElytraRaceMain.getInstance().getLogger().warning("Could not instantiate a new ScoreCalculator from class " + clazz);
+				e.printStackTrace();
+			}
+            return null;
+		}
 	}
 }

@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.torchmind.minecraft.annotation.Plugin;
 
-import me.MiniDigger.ElytraRace.ElytraRacePortal.ElytraRacePortalType;
 import me.MiniDigger.ElytraRace.config.*;
 import me.MiniDigger.ElytraRace.lib.com.minnymin.command.CommandFramework;
 
@@ -18,8 +17,8 @@ import mkremins.fanciful.FancyMessage;
 @Plugin(name = "ElytraRace", version = "1.0", description = "Use your new fancy Elytra to fly through portals and compare your score to your friends", author = "MiniDigger", website = "http://www.example.org")
 public class ElytraRaceMain extends JavaPlugin {
 	
-	public static final FancyMessage PREFIX = new FancyMessage("[").color(ChatColor.BLACK).then("Elytra").color(ChatColor.RED).then("Race")
-			.color(ChatColor.BLUE).then("] ").color(ChatColor.BLACK);
+	public static final FancyMessage PREFIX = new FancyMessage("[").color(ChatColor.GRAY).then("Elytra").color(ChatColor.RED).then("Race")
+			.color(ChatColor.BLUE).then("] ").color(ChatColor.GRAY);
 	private static ElytraRaceMain INSTANCE;
 	
 	public static final int NO_SCORE = -9000;

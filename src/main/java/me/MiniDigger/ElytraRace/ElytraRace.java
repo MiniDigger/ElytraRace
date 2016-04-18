@@ -26,7 +26,7 @@ public class ElytraRace implements ConfigurationSerializable {
 		this.spawn = spawn;
 		this.portals = portals;
 		this.scores = scores;
-		this.scoreCalc = new ElytraRaceScoreCalculator(type);
+		this.scoreCalc =type.newInstance();
 	}
 	
 	public void addPortal(ElytraRacePortal p, int no) {
@@ -96,23 +96,6 @@ public class ElytraRace implements ConfigurationSerializable {
 		return scoreCalc;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static ElytraRace deserialize(Map<String, Object> map) {
-		return new ElytraRace((String) map.get("name"), (Location) map.get("spawn"), (List<ElytraRacePortal>) map.get("portals"),
-				(Map<UUID, Double>) map.get("scores"), ElytraRaceScoreCalculatorType.valueOf((String) map.get("type")));
-	}
-	
-	@Override
-	public Map<String, Object> serialize() {
-		Map<String, Object> map = new HashMap<>();
-		map.put("name", name);
-		map.put("spawn", spawn);
-		map.put("portals", portals);
-		map.put("scores", scores);
-		map.put("type", scoreCalc.getType().name());
-		return map;
-	}
-	
 	public Map<UUID, Double> getHighScores() {
 		return sortByValue(scores);
 	}
@@ -130,5 +113,22 @@ public class ElytraRace implements ConfigurationSerializable {
 			result.put(entry.getKey(), entry.getValue());
 		}
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static ElytraRace deserialize(Map<String, Object> map) {
+		return new ElytraRace((String) map.get("name"), (Location) map.get("spawn"), (List<ElytraRacePortal>) map.get("portals"),
+				(Map<UUID, Double>) map.get("scores"), ElytraRaceScoreCalculatorType.valueOf((String) map.get("type")));
+	}
+
+	@Override
+	public Map<String, Object> serialize() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("name", name);
+		map.put("spawn", spawn);
+		map.put("portals", portals);
+		map.put("scores", scores);
+		map.put("type", scoreCalc.getType().name());
+		return map;
 	}
 }

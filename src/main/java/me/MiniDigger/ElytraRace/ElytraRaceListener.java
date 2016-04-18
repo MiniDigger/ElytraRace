@@ -45,17 +45,6 @@ public class ElytraRaceListener implements Listener {
 		}
 		
 		if (portal.getRaceName().equals(race.getName())) {
-			int no = race.getPortals().indexOf(portal);
-			System.out.println("old no " + race.getPortalNo(player));
-			System.out.println("portal no " + no);
-			// TODO fix portal no (add a field to portal containing the no in the race)
-			if (race.getPortalNo(player) == no - 1) {
-				portal.applyEffect(player);
-				race.setPortalNo(player, no);
-			} else {
-				portal.applyNegativEffect(player);
-			}
-			
 			race.getScoreCalculator().portal(player, portal);
 		}
 	}
