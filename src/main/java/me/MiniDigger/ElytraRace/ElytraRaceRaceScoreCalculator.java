@@ -35,11 +35,11 @@ public class ElytraRaceRaceScoreCalculator extends ElytraRaceScoreCalculator {
         int newNo = portal.getNo();
         int oldNo = portalNo.get(p.getUniqueId());
 
-        System.out.println("newNo " +newNo);
-        System.out.println("oldNo " +oldNo);
-
         if(newNo != oldNo+1){
-            portal.applyNegativEffect(p);
+            if(newNo == oldNo){
+
+            }
+            portal.applyNegativEffect(p,oldNo,newNo);
         }else{
             portal.applyEffect(p);
             portalNo.put(p.getUniqueId(),newNo);

@@ -23,7 +23,7 @@ public class ElytraRacePortal implements ConfigurationSerializable {
     private List<Location> locs = new ArrayList<>();
 
     public ElytraRacePortal(String race, ElytraRacePortalType type, List<Location> locs, int no) {
-        this(race, type,no);
+        this(race, type, no);
         this.locs = locs;
     }
 
@@ -34,7 +34,7 @@ public class ElytraRacePortal implements ConfigurationSerializable {
         this.locs = new ArrayList<>();
     }
 
-    public int getNo(){
+    public int getNo() {
         return no;
     }
 
@@ -107,14 +107,24 @@ public class ElytraRacePortal implements ConfigurationSerializable {
         sound(p.getLocation());
         effect(color);
         ElytraRace race = getRace();
-        title(p, ChatColor.GOLD + "Portal passed", ChatColor.GOLD + "Only " + (race.getPortals().size() - race.getPortalNo(p)) + " Portals to go", 20, 2 * 20,
-                20);
+        if (type == ElytraRacePortalType.FINISH) {
+            //TODO show score
+            title(p, ChatColor.GREEN + "FINISH", ChatColor.GREEN + "Your score: ", 20, 2 * 20,
+                    20);
+        } else {
+            title(p, ChatColor.GOLD + "Portal passed", ChatColor.GOLD + "Only " + (race.getPortals().size() - race.getPortalNo(p)) + " Portals to go", 20, 2 * 20,
+                    20);
+        }
     }
 
-    public void applyNegativEffect(Player player) {
+    public void applyNegativEffect(Player player, int oldNo, int newNo) {
         effect(Color.BLACK);
         actionbar(player, ChatColor.RED + "That was the wrong portal!");
-        title(player, ChatColor.BLACK + "Wrong Portal", ChatColor.BLACK + "You need to pass " + (getRace().getPortalNo(player) + 1) + " First", 20, 2 * 20, 20);
+        if (oldNo == newNo) {
+            title(player, ChatColor.BLACK + "Wrong Portal", ChatColor.BLACK + "You already passed that one!", 20, 2 * 20, 20);
+        } else {
+            title(player, ChatColor.BLACK + "Wrong Portal", ChatColor.BLACK + "You need to pass " + (oldNo + 1) + " First", 20, 2 * 20, 20);
+        }
     }
 
     public void applyCreationEffect(Player player) {
@@ -178,7 +188,7 @@ public class ElytraRacePortal implements ConfigurationSerializable {
         map.put("race", race);
         map.put("type", type.name());
         map.put("locs", locs);
-        map.put("no",no);
+        map.put("no", no);
         return map;
     }
 }
