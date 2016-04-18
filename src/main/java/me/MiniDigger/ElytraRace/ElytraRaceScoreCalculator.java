@@ -28,11 +28,11 @@ public abstract class ElytraRaceScoreCalculator {
 		/**
 		 * Get points for flying though portals
 		 */
-		POINTS(ElytraRaceRaceScoreCalculator.class);
+		POINTS(ElytraRacePointsScoreCalculator.class);
 
 		private Class clazz;
 
-		private ElytraRaceScoreCalculatorType(Class clazz){
+		ElytraRaceScoreCalculatorType(Class clazz){
 			this.clazz = clazz;
 		}
 

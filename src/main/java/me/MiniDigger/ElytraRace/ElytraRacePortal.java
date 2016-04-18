@@ -94,11 +94,18 @@ public class ElytraRacePortal implements ConfigurationSerializable {
                 // TODO Handle finish
                 actionbar(p, ChatColor.GOLD + "Finish!");
                 break;
-            case LOW:
+            case SLOW:
                 p.getPlayer().setVelocity(p.getLocation().getDirection().multiply(ElytraRaceMain.SLOW_SPEED));
                 actionbar(p, ChatColor.GOLD + "Slow!");
                 break;
             case NORMAL:
+                break;
+            //Points
+            case LESS:
+                break;
+            case SOME:
+                break;
+            case MANY:
                 break;
             default:
                 break;
